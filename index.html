@@ -28,13 +28,13 @@ body{
     color:var(--text);
 }
 
-/* ===== NAVBAR ===== */
+/* ================= NAVBAR ================= */
 nav{
     position:fixed;
     top:0;
     width:100%;
     z-index:1000;
-    background:rgba(15,32,39,.6);
+    background:rgba(15,32,39,.75);
     backdrop-filter:blur(14px);
     border-bottom:1px solid var(--border);
 }
@@ -62,8 +62,8 @@ nav{
 .nav-links a{
     text-decoration:none;
     color:var(--text);
-    position:relative;
     font-size:.95rem;
+    position:relative;
 }
 
 .nav-links a::after{
@@ -81,7 +81,7 @@ nav{
     width:100%;
 }
 
-/* ===== HERO ===== */
+/* ================= HERO ================= */
 header{
     min-height:100vh;
     display:flex;
@@ -119,7 +119,7 @@ h1{
 
 .tagline{opacity:.85;margin-top:.5rem}
 
-/* ===== SECTIONS ===== */
+/* ================= SECTIONS ================= */
 .container{width:90%;max-width:1200px;margin:auto}
 
 section{
@@ -130,12 +130,20 @@ section{
     border-radius:22px;
     border:1px solid var(--border);
     box-shadow:0 30px 60px rgba(0,0,0,.35);
-    opacity:0;
-    transform:translateY(60px);
-    transition:1s;
+    scroll-margin-top:100px;
 }
 
-section.show{opacity:1;transform:translateY(0)}
+/* animation safety */
+.hidden{
+    opacity:0;
+    transform:translateY(60px);
+}
+
+.show{
+    opacity:1;
+    transform:translateY(0);
+    transition:1s ease;
+}
 
 h2{
     margin-bottom:2rem;
@@ -152,7 +160,7 @@ h2::after{
     bottom:-10px;
 }
 
-/* ===== CONTACT ===== */
+/* ================= CONTACT ================= */
 .contact-info{
     display:flex;
     flex-wrap:wrap;
@@ -177,7 +185,7 @@ h2::after{
     background:rgba(255,255,255,.15);
 }
 
-/* ===== SKILLS ===== */
+/* ================= SKILLS ================= */
 .skills-container{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
@@ -190,9 +198,7 @@ h2::after{
     border-radius:18px;
 }
 
-.skill{
-    margin:1.2rem 0;
-}
+.skill{margin:1.2rem 0}
 
 .skill-header{
     display:flex;
@@ -215,7 +221,7 @@ h2::after{
     transition:1.5s ease;
 }
 
-/* ===== PROJECTS ===== */
+/* ================= PROJECTS ================= */
 .project{
     padding:2rem;
     background:rgba(255,255,255,.1);
@@ -229,7 +235,7 @@ h2::after{
     box-shadow:0 25px 60px rgba(0,0,0,.4);
 }
 
-/* ===== EXPERIENCE ===== */
+/* ================= EXPERIENCE ================= */
 .experience{
     padding:2rem;
     border-left:4px solid var(--accent);
@@ -238,7 +244,7 @@ h2::after{
     margin-bottom:1.5rem;
 }
 
-/* ===== FOOTER ===== */
+/* ================= FOOTER ================= */
 footer{
     padding:3rem 0;
     text-align:center;
@@ -268,7 +274,7 @@ footer{
     transform:translateY(-8px);
 }
 
-/* ===== RESPONSIVE ===== */
+/* ================= RESPONSIVE ================= */
 @media(max-width:768px){
     .nav-links{display:none}
     section{padding:2rem}
@@ -278,7 +284,6 @@ footer{
 
 <body>
 
-<!-- NAVIGATION -->
 <nav>
 <div class="nav-container">
 <div class="logo">Keerthana</div>
@@ -302,12 +307,12 @@ footer{
 
 <div class="container">
 
-<section id="about">
+<section id="about" class="hidden">
 <h2>About Me</h2>
 <p>Computer Science student focused on AI, cloud computing, and sustainability-driven innovation.</p>
 </section>
 
-<section id="contact">
+<section id="contact" class="hidden">
 <h2>Contact</h2>
 <div class="contact-info">
 <div class="contact-item"><i class="fas fa-phone"></i>8122957916</div>
@@ -316,7 +321,7 @@ footer{
 </div>
 </section>
 
-<section id="skills">
+<section id="skills" class="hidden">
 <h2>Skills</h2>
 <div class="skills-container">
 <div class="skill-category">
@@ -335,7 +340,7 @@ footer{
 </div>
 </section>
 
-<section id="projects">
+<section id="projects" class="hidden">
 <h2>Projects</h2>
 <div class="project">
 <h3>AI Voice Call Agent</h3>
@@ -343,7 +348,7 @@ footer{
 </div>
 </section>
 
-<section id="experience">
+<section id="experience" class="hidden">
 <h2>Experience</h2>
 <div class="experience">
 <h3>GenAI Intern – Pinesphere Solutions</h3>
@@ -366,17 +371,18 @@ footer{
 
 <script>
 /* Section reveal */
-const sections=document.querySelectorAll('section');
+const sections=document.querySelectorAll('.hidden');
 const observer=new IntersectionObserver(entries=>{
 entries.forEach(entry=>{
 if(entry.isIntersecting){
 entry.target.classList.add('show');
+observer.unobserve(entry.target);
 }
 });
 },{threshold:.15});
 sections.forEach(sec=>observer.observe(sec));
 
-/* Skill bars */
+/* Skill bar animation */
 const bars=document.querySelectorAll('.skill-fill');
 const barObserver=new IntersectionObserver(entries=>{
 entries.forEach(entry=>{
